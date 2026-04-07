@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import sqlite3
 app = Flask(__name__)
 
@@ -13,7 +13,7 @@ def get_books():
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM books')
     books = cursor.fetchall()
-    return str([dict(book) for book in books])
+    return jsonify([dict(book) for book in books])
 
 @app.route('/books/add', methods=['POST'])
 def add_book():
@@ -51,7 +51,7 @@ def search_book():
     cursor.execute("SELECT * FROM books WHERE title LIKE ?", (f'%{title}%',))
     books = cursor.fetchall()
     conn.commit()
-    return str([dict(book) for book in books])
+    return jsonify([dict(book) for book in books])
 
 
 @app.route('/books/search-author')
@@ -62,7 +62,7 @@ def search_author():
     cursor.execute("SELECT * FROM books WHERE author Like ?", (f'%{author}%',))
     books = cursor.fetchall()
     conn.commit()
-    return str([dict(book) for book in books])
+    return jsonify([dict(book) for book in books])
     
 
 if __name__ == '__main__':
