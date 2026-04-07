@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import sqlite3
+
 app = Flask(__name__)
 
 def get_db():
@@ -29,9 +30,14 @@ def add_book():
 def delete_book(id):
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM books WHERE id = ?", (id,))
-    conn.commit()
-    return '삭제 성공!'
+    cursor.execute("SELECT * FROM books WHERE id = ?", (id,))
+    book = cursor.fetchone()
+    if book is None:
+        return "없는책"
+    else:
+        cursor.execute("DELETE FROM books WHERE id = ?", (id,))
+        conn.commit()
+        return '삭제 성공!'
 
 @app.route('/books/update/<id>', methods=['PUT'])
 def update_book(id):
@@ -64,6 +70,6 @@ def search_author():
     conn.commit()
     return jsonify([dict(book) for book in books])
     
-
+    
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
