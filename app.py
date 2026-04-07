@@ -52,6 +52,17 @@ def search_book():
     books = cursor.fetchall()
     conn.commit()
     return str([dict(book) for book in books])
+
+
+@app.route('/books/search')
+def search_author():
+    author = request.args.get('author')
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM books WHERE author Like ?", (f'%{author}%',))
+    books = cursor.fetchall()
+    conn.commit()
+    return str([dict(book) for book in books])
     
 
 if __name__ == '__main__':
