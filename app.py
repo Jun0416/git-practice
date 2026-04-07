@@ -54,7 +54,7 @@ def search_book():
     return str([dict(book) for book in books])
 
 
-@app.route('/books/search')
+@app.route('/books/search-author')
 def search_author():
     author = request.args.get('author')
     conn = get_db()
