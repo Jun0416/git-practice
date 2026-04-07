@@ -43,5 +43,16 @@ def update_book(id):
     conn.commit()
     return '수정 성공!'
 
+@app.route('/books/search')
+def search_book():
+    title = request.args.get('title')
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM books WHERE title LIKE ?", (f'%{title}%',))
+    books = cursor.fetchall()
+    conn.commit()
+    return str([dict(book) for book in books])
+    
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
