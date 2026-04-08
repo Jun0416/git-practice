@@ -30,14 +30,14 @@ def add_book():
 def delete_book(id):
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM books WHERE id = ?", (id,))
+    cursor.execute("SELECT id FROM books WHERE id = ?", (id,))
     book = cursor.fetchone()
     if book is None:
-        return "없는책"
+        return "없는책", 404
     else:
         cursor.execute("DELETE FROM books WHERE id = ?", (id,))
         conn.commit()
-        return '삭제 성공!'
+        return '삭제 성공!', 200
 
 @app.route('/books/update/<id>', methods=['PUT'])
 def update_book(id):
