@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Books</title>
+</head>
+<body>
+    <h1>📚 Books API</h1>
+        <input id="username" placeholder="아이디">
+        <input id="password" type="password" placeholder="비밀번호">
+        <button onclick="login()">로그인</button>
+
+        <hr>
+
+        <input id="title" placeholder="제목">
+        <input id="author" placeholder="저자">
+        <button onclick="addBook()">추가</button>
+    <ul id="book-list"></ul>
+
+    <script>
+        fetch('/books')
+            .then(res => res.json())
+            .then(books => {
+                const list = document.getElementById('book-list')
+                books.forEach(book => {
+                    list.innerHTML += `<li>${book.title} - ${book.author}</li>`
+                })
+            })
+        function addBook() {
+            const title = document.getElementById('title').value
+            const author = document.getElementById('author').value
+    
+            fetch('/books/add', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                body: JSON.stringify({title, author})
+            })
+            .then(res => res.text())
+            .then(msg => alert(msg))
+        }
+function login() {
+    const username = document.getElementById('username').value
+    const password = document.getElementById('password').value
+    
+    fetch('/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({username, password})
+    })
+    .then(res => res.json())
+    .then(data => {
+        localStorage.setItem('token', data.token)
+        alert('로그인 성공!')
+    })
+}
+    </script>
+</body>
+</html>

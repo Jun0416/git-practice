@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 import sqlite3
 import bcrypt
@@ -103,7 +103,11 @@ def login():
         return jsonify({'token': token}), 200
     else:
         return "비밀번호 틀림", 401
-    
+
+
+@app.route('/')
+def index():
+    return render_template('index.html')
     
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
